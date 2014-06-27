@@ -1,0 +1,15 @@
+{
+  "name": "SQL",
+  "version": "0.0.0",
+  "description": "",
+  "main": "db.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jasen and anthony",
+  "license": "ISC",
+  "dependencies": {
+    "mysql": "~2.3.2",
+    "underscore": "~1.6.0"
+  }
+}

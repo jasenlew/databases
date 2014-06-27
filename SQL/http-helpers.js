@@ -1,12 +1,7 @@
 var path = require('path');
 var fs = require('fs');
-var archive = require('../helpers/archive-helpers');
 var utils = require('./server-utils');
 var url = require('url');
-
-
-
-
 
 
 exports.headers = headers = {
@@ -25,12 +20,9 @@ var mimeTypes = {
     "js": "text/javascript",
     "css": "text/css"};
 
-exports.serveAssets = function(res, asset) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
-};
 
-exports.sendStaticPage = function(req, res){
+
+exports.serveAssets = function(req, res){
   var uri = url.parse(req.url).pathname;
   var filename = path.join(process.cwd(), uri);
 
@@ -48,29 +40,9 @@ exports.sendStaticPage = function(req, res){
     var fileStream = fs.createReadStream(filename);
     fileStream.pipe(res);
 
-  }); //end path.exists
+  });
 };
 
-exports.sendCachedPage = function(req, res, site){
-  var uri = url.parse(req.url).pathname;
-  var filename = archive.paths.archivedSites + '/' + site;
-
-  path.exists(filename, function(exists) {
-    // functions like an assertion. we only reach this
-    // point if we matched a url so there should be a
-    // corresponding file
-    if(!exists) {
-      throw 'cache file does not exist';
-      return;
-    };
-    var mimeType = mimeTypes[path.extname(filename).split(".")[1]];
-    res.writeHead(200, mimeType);
-
-    var fileStream = fs.createReadStream(filename);
-    fileStream.pipe(res);
-
-  }); //end path.exists
-};
 
 exports.sendOptionsResponse = function(req, res){
   utils.sendResponse(res, null);

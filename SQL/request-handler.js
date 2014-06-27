@@ -4,9 +4,9 @@ var messages = require('./http-helpers');
 
 
 var messageRouter = {
-  'POST' : messagesp.postMessage,
-  'GET' : messages.getMessages,
-  'OPTIONS': archive.sendOptionsResponse
+  'POST' : messages.postMessage,
+  'GET' : messages.serveAssets,
+  'OPTIONS': messages.sendOptionsResponse
 };
 
 
@@ -18,6 +18,7 @@ exports.handleRequest = function(req, res) {
 
   // Path to handle OPTIONS request
   if(path === '/' && messageRouter[method]){
+    console.log('conditional reached');
     messageRouter[method](req,res);
     return;
   }
@@ -37,21 +38,12 @@ exports.handleRequest = function(req, res) {
     req.on('end',function(){
       chunk = chunk.substring(4);
       console.log('chunk', chunk);
-      archive.isUrlInList(chunk, function(urlFound){
-        if(urlFound){
-          console.log('url is found');
-          // read from sites dir and send cached html
-          // archive.
-          messages.sendCachedPage(req, res, chunk);
-        }else{
-          // response with loading.html
-          messages.sendStaticPage(req, res, true);
-        }
-      });
+      //previously we had to extract the url
+      //Stringify and send messgaes
     });
 
   }else if(path.substr(0,7) === '/public'){
-    messages.sendStaticPage(req, res);
+    messages.serveAssets(req, res);
   }else {
     messages.send404(req, res);
   }
