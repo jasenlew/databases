@@ -50,7 +50,7 @@ var app = {
     this.currentRoom = 'lobby';
     this.username = 'manu';
     this.friends = {};
-    // this._refresh();
+    this._refresh();
 
     var attackMsg = '<script>prompt("What is your name")</script>';
     var msgObj = {
@@ -93,15 +93,15 @@ var app = {
 
   fetch: function(callback){
     //fetch code here
+    //
+    var stringifiedData = JSON.stringify({limit:30, order:'-createdAt'});
     $.ajax({
       url: this.server,
       type: "GET",
       dataType: 'json',
-      data: {
-        limit: 30,
-        order: '-createdAt'
-      },
+      data: stringifiedData,
       success: function(data){
+        console.log('fetch', data);
         callback(data);
       },
       error: function(xhr,status){

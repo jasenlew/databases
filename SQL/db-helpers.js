@@ -1,4 +1,5 @@
 var mysql = require('mysql');
+var utils = require('./server-utils');
 
 var  connection = mysql.createConnection({
   host: 'localhost',
@@ -123,5 +124,14 @@ exports.findAndCreate = function(data, callback) {
         insertRoomAndUser(data, callback);
       }
     });
+  });
+};
+
+exports.sendMessages = function (req, res) {
+  connection.query('SELECT * from messages', function (err, rows) {
+    var responseObj = {
+      results: rows // TO DO: Need to get names of rows vs id
+    };
+    utils.sendResponse(res, responseObj, 200);
   });
 };

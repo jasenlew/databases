@@ -19,14 +19,13 @@ exports.handleRequest = function(req, res) {
 
   // Path to handle OPTIONS request
   if(path === '/' && messageRouter[method]){
-    console.log('conditional reached');
     messageRouter[method](req,res);
     return;
   }
 
   if(path === '/classes/room1' && method === 'GET') {
     //TODO: write send messages
-    messages.sendMessages(req, res);
+    db.sendMessages(req, res);
 
   } else if(path === '/classes/room1' && method === 'POST'){
     // get data from post
