@@ -1,0 +1,14 @@
+{
+  "name": "ORM_Refactor",
+  "version": "0.0.0",
+  "description": "Chatterbox server using Sequalize",
+  "main": "orm-example.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "A&J",
+  "license": "ISC",
+  "dependencies": {
+    "underscore": "~1.6.0"
+  }
+}
