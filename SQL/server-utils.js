@@ -16,15 +16,9 @@ var sendResponse = function(response, data, statusCode){
 var collectData = function(request, cb){
   var data = "";
 
-
-  console.log("JASEN: In collectData function", request.body);
-
   request.on("data", function(chunk){
     data += chunk.toString();
-    console.log("JASEN: Data chunks/", data);
   });
-
-  console.log("JASEN: After chunking");
 
   request.on("end", function(){
     cb(null, JSON.parse(data));
