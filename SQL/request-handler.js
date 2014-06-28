@@ -2,6 +2,7 @@ var path = require('path');
 var url = require('url');
 var messages = require('./http-helpers');
 var db = require('./db-helpers');
+var utils = require('./server-utils');
 
 var messageRouter = {
   'POST' : messages.postMessage,
@@ -39,7 +40,13 @@ exports.handleRequest = function(req, res) {
     req.on('end',function(){
       console.log('chunk', chunk);
       var dataObj =  JSON.parse(chunk);
-      db.findAndCreate(dataObj);
+      db.findAndCreate(dataObj, function (dbSuccess) {
+        if (dbSuccess) {
+          utils.sendResponse(res, 'Successful db insert.', 200);
+        } else {
+          utils.sendResponse(res, 'Failed db insert.', 500);
+        }
+      });
     });
 
   }else if(path.substr(0,7) === '/public'){

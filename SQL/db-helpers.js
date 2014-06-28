@@ -22,12 +22,15 @@ var insertMessage = function(roomId, userId, data, callback){
   sql = mysql.format(sql, inserts);
   connection.query(sql, function(err){
     if(err) {
+      callback(false);
       throw err;
+    } else {
+      callback(true);
     }
   });
 };
 
-var insertRoom = function (userId, data) {
+var insertRoom = function (userId, data, callback) {
 
   var sql = 'INSERT INTO rooms (name) VALUES (?)';
   var inserts = [data.roomname];
@@ -39,13 +42,16 @@ var insertRoom = function (userId, data) {
     sql0 = mysql.format(sql0, inserts0);
     connection.query(sql0, function(err){
       if(err) {
+        callback(false);
         throw err;
+      } else {
+        callback(true);
       }
     });
   });
 };
 
-var insertUser = function (roomId, data) {
+var insertUser = function (roomId, data, callback) {
 
   var sql = 'INSERT INTO users (name) VALUES (?)';
   var inserts = [data.username];
@@ -57,13 +63,16 @@ var insertUser = function (roomId, data) {
     sql0 = mysql.format(sql0, inserts0);
     connection.query(sql0, function(err){
       if(err) {
+        callback(false);
         throw err;
+      } else {
+        callback(true);
       }
     });
   });
 };
 
-var insertRoomAndUser = function (data) {
+var insertRoomAndUser = function (data, callback) {
   console.log('insertRoomAndUser');
 
   var sql = 'INSERT INTO rooms (name) VALUES (?)';
@@ -71,7 +80,7 @@ var insertRoomAndUser = function (data) {
   sql = mysql.format(sql, inserts);
   console.log(sql);
   connection.query(sql, function(err, res) {
-    insertUser(res.insertId, data);
+    insertUser(res.insertId, data, callback);
   });
 
 };

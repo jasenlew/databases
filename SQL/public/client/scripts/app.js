@@ -50,7 +50,7 @@ var app = {
     this.currentRoom = 'lobby';
     this.username = 'manu';
     this.friends = {};
-    //this._refresh();
+    // this._refresh();
 
     var attackMsg = '<script>prompt("What is your name")</script>';
     var msgObj = {
@@ -97,10 +97,10 @@ var app = {
       url: this.server,
       type: "GET",
       dataType: 'json',
-      // data: {
-      //   limit: 30,
-      //   order: '-createdAt'
-      // },
+      data: {
+        limit: 30,
+        order: '-createdAt'
+      },
       success: function(data){
         callback(data);
       },
