@@ -15,9 +15,10 @@ connection.connect();
 //
 //
 
-var insertMessage = function(roomId, userId, data){
-  var sql = 'INSERT INTO messages (users_id, rooms_id, text) VALUES(??, ??, ??)';
-  var inserts = [roomId, userId, data.text.substr(0,254)];
+var insertMessage = function(roomId, userId, data, callback){
+  var sql = 'INSERT INTO messages (users_id, rooms_id, text) VALUES(?, ?, ?)';
+
+  var inserts = [roomId, userId, connection.escape(data.text.substr(0,254))];
   sql = mysql.format(sql, inserts);
   connection.query(sql, function(err){
     if(err) {
@@ -33,10 +34,10 @@ var insertRoom = function (userId, data) {
   sql = mysql.format(sql, inserts);
 
   connection.query(sql, function(err, res) {
-    var sql0 = 'INSERT INTO messages (users_id, rooms_id, text) VALUES(??, ??, ??)';
-    var inserts0 = [userId, res.insertId, data.text.substr(0,254)];
+    var sql0 = 'INSERT INTO messages (users_id, rooms_id, text) VALUES(?, ?, ?)';
+    var inserts0 = [userId, res.insertId, connection.escape(data.text.substr(0,254))];
     sql0 = mysql.format(sql0, inserts0);
-    connection.query(sql, function(err){
+    connection.query(sql0, function(err){
       if(err) {
         throw err;
       }
@@ -51,10 +52,10 @@ var insertUser = function (roomId, data) {
   sql = mysql.format(sql, inserts);
 
   connection.query(sql, function(err, res) {
-    var sql0 = 'INSERT INTO messages (users_id, rooms_id, text) VALUES(??, ??, ??)';
-    var inserts0 = [res.insertId, roomId, data.text.substr(0,254)];
+    var sql0 = 'INSERT INTO messages (users_id, rooms_id, text) VALUES(?, ?, ?)';
+    var inserts0 = [res.insertId, roomId, connection.escape(data.text.substr(0,254))];
     sql0 = mysql.format(sql0, inserts0);
-    connection.query(sql, function(err){
+    connection.query(sql0, function(err){
       if(err) {
         throw err;
       }
@@ -66,7 +67,7 @@ var insertRoomAndUser = function (data) {
   console.log('insertRoomAndUser');
 
   var sql = 'INSERT INTO rooms (name) VALUES (?)';
-  var inserts = [data.roomname];
+  var inserts = [connection.escape(data.roomname)];
   sql = mysql.format(sql, inserts);
   console.log(sql);
   connection.query(sql, function(err, res) {
@@ -75,13 +76,13 @@ var insertRoomAndUser = function (data) {
 
 };
 
-exports.findAndCreate = function(data) {
+exports.findAndCreate = function(data, callback) {
 
-  var sql0 = "SELECT * from rooms WHERE name = ?";
-  var inserts0 = [data.roomname];
+  var sql0 = 'SELECT * from rooms WHERE name = ?';
+  var inserts0 = [connection.escape(data.roomname)];
   sql0 = mysql.format(sql0, inserts0);
 
-  var sql1 = "SELECT * from users WHERE name = ?";
+  var sql1 = 'SELECT * from users WHERE name = ?';
   var inserts1 = [data.username];
   sql1 = mysql.format(sql1, inserts1);
 
@@ -104,13 +105,13 @@ exports.findAndCreate = function(data) {
       console.log('roomRows', roomRows, 'userRows', userRows);
 
       if (roomId !== null && userId !== null) {
-        insertMessage(roomId, userId, data);
+        insertMessage(roomId, userId, data, callback);
       } else if (roomId === null && userId !== null) {
-        insertRoom(userId, data);
+        insertRoom(userId, data, callback);
       } else if (roomId !== null && userId === null) {
-        insertUser(roomId, data);
+        insertUser(roomId, data, callback);
       } else {
-        insertRoomAndUser(data);
+        insertRoomAndUser(data, callback);
       }
     });
   });
