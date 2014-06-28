@@ -46,11 +46,11 @@ var app = {
       });
     };
 
-    this.server = 'http://127.0.0.1:3000/1/classes/messages';
+    this.server = 'http://127.0.0.1:8080/classes/room1';
     this.currentRoom = 'lobby';
     this.username = 'manu';
     this.friends = {};
-    this._refresh();
+    //this._refresh();
 
     var attackMsg = '<script>prompt("What is your name")</script>';
     var msgObj = {

@@ -1,7 +1,7 @@
 var path = require('path');
 var url = require('url');
 var messages = require('./http-helpers');
-
+var db = require('./db-helpers');
 
 var messageRouter = {
   'POST' : messages.postMessage,
@@ -25,21 +25,21 @@ exports.handleRequest = function(req, res) {
 
   if(path === '/classes/room1' && method === 'GET') {
     //TODO: write send messages
-    messages.sendMessags(req, res);
+    messages.sendMessages(req, res);
 
   } else if(path === '/classes/room1' && method === 'POST'){
     // get data from post
     // TODO: refactor to use collectData
+    console.log('post received');
     var chunk = '';
     req.on('data', function(data){
       chunk += data.toString();
     });
 
     req.on('end',function(){
-      chunk = chunk.substring(4);
       console.log('chunk', chunk);
-      //previously we had to extract the url
-      //Stringify and send messgaes
+      var dataObj =  JSON.parse(chunk);
+      db.findAndCreate(dataObj);
     });
 
   }else if(path.substr(0,7) === '/public'){
