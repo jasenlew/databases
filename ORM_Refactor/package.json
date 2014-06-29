@@ -9,6 +9,8 @@
   "author": "A&J",
   "license": "ISC",
   "dependencies": {
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "sequelize": "~1.7.9",
+    "mysql": "~2.3.2"
   }
 }

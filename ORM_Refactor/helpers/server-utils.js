@@ -15,13 +15,11 @@ var sendResponse = function(response, data, statusCode){
 
 var collectData = function(request, cb){
   var data = "";
-
   request.on("data", function(chunk){
     data += chunk.toString();
   });
-
   request.on("end", function(){
-    cb(null, JSON.parse(data));
+    cb(JSON.parse(data));
   });
 };
 

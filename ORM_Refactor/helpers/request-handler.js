@@ -10,7 +10,6 @@ var messageRouter = {
   'OPTIONS': messages.sendOptionsResponse
 };
 
-
 exports.handleRequest = function(req, res) {
 
   var path = url.parse(req.url).pathname;
@@ -20,6 +19,7 @@ exports.handleRequest = function(req, res) {
   // Path to handle OPTIONS request
   if(path === '/' && messageRouter[method]){
     messageRouter[method](req,res);
+    db.initMessages();
     return;
   }
 
@@ -30,22 +30,13 @@ exports.handleRequest = function(req, res) {
   } else if(path === '/classes/room1' && method === 'POST'){
     // get data from post
     // TODO: refactor to use collectData
-    console.log('post received');
-    var chunk = '';
-    req.on('data', function(data){
-      chunk += data.toString();
-    });
 
-    req.on('end',function(){
-      console.log('chunk', chunk);
-      var dataObj =  JSON.parse(chunk);
-      db.findAndCreate(dataObj, function (dbSuccess) {
-        if (dbSuccess) {
-          utils.sendResponse(res, 'Successful db insert.', 200);
-        } else {
-          utils.sendResponse(res, 'Failed db insert.', 500);
-        }
-      });
+    db.findAndCreate(req, function (dbSuccess) {
+      if (dbSuccess) {
+        utils.sendResponse(res, 'Successful db insert.', 200);
+      } else {
+        utils.sendResponse(res, 'Failed db insert.', 500);
+      }
     });
 
   }else if(path.substr(0,7) === '/public'){
